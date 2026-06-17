@@ -1,0 +1,17 @@
+{
+  "name": "console-platform-mvp",
+  "private": true,
+  "scripts": {
+    "dev": "pnpm --parallel -r dev",
+    "dev:shell": "pnpm --filter shell dev",
+    "dev:ecs": "pnpm --filter ecs dev",
+    "dev:common": "pnpm --filter common dev",
+    "build": "pnpm -r build",
+    "build:shell": "pnpm --filter shell build",
+    "build:ecs": "pnpm --filter ecs build",
+    "build:common": "pnpm --filter common build"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
