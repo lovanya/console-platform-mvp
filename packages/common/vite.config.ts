@@ -4,10 +4,11 @@ import { federation } from '@module-federation/vite'
 
 export default defineConfig({
   plugins: [
-    react(),
+    react({ exclude: [/./] }), // disable React Refresh for remote modules
     federation({
       name: 'common',
       filename: 'remoteEntry.js',
+      varFilename: 'remoteEntry.var.js',
       exposes: {
         './RegionSelect': './src/RegionSelect.tsx',
         './PriceBadge': './src/PriceBadge.tsx',

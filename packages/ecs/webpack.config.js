@@ -9,7 +9,7 @@ module.exports = (env, argv) => {
     entry: path.resolve(__dirname, './src/index.tsx'),
     output: {
       path: path.resolve(__dirname, './dist'),
-      publicPath: 'http://localhost:3000/',
+      publicPath: 'auto',
       clean: true,
     },
     resolve: {
@@ -35,18 +35,15 @@ module.exports = (env, argv) => {
     },
     plugins: [
       new ModuleFederationPlugin({
-        name: 'shell',
-        remotes: {
-          ecs: isDev
-            ? 'ecs@http://localhost:3001/remoteEntry.js'
-            : 'ecs@https://cdn.console.aliyun.com/ecs/remoteEntry.js',
-          common: isDev
-            ? 'common@http://localhost:3002/remoteEntry.js'
-            : 'common@https://cdn.console.aliyun.com/common/remoteEntry.js',
+        name: 'ecs',
+        filename: 'remoteEntry.js',
+        exposes: {
+          './routes': './src/router.tsx',
+          './InstanceTable': './src/components/InstanceTable.tsx',
         },
         shared: {
-          react: { singleton: true, requiredVersion: '^18.2.0', eager: true },
-          'react-dom': { singleton: true, requiredVersion: '^18.2.0', eager: true },
+          react: { singleton: true, requiredVersion: '^18.2.0' },
+          'react-dom': { singleton: true, requiredVersion: '^18.2.0' },
           'react-router-dom': { singleton: true, requiredVersion: '^6.20.0' },
         },
       }),
@@ -55,7 +52,7 @@ module.exports = (env, argv) => {
       }),
     ],
     devServer: {
-      port: 3000,
+      port: 3001,
       historyApiFallback: true,
       hot: true,
     },
