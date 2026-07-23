@@ -29,8 +29,9 @@ module.exports = {
             transform: {
               react: {
                 runtime: 'automatic',
-                development: isDev,
-                // disable React Refresh to avoid ESM/CJS interop issues
+                // Use production JSX runtime even in dev mode to avoid
+                // react-jsx-dev-runtime module-init edge cases with MF shared singleton
+                development: false,
                 refresh: false,
               },
             },
