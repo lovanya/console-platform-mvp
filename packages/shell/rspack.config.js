@@ -10,7 +10,10 @@ module.exports = {
   entry: path.resolve(__dirname, './src/index.tsx'),
   output: {
     path: path.resolve(__dirname, './dist'),
-    publicPath: 'auto',
+    // Use '/' instead of 'auto' so script src is absolute.
+    // 'auto' doesn't work reliably when serving from a deep path
+    // (e.g., /products/slb) with a static file server.
+    publicPath: '/',
     clean: true,
   },
   resolve: {
