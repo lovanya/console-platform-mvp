@@ -1,5 +1,3 @@
-import { useState } from 'react'
-
 const REGIONS = [
   { id: 'cn-hangzhou', name: '华东 1（杭州）' },
   { id: 'cn-shanghai', name: '华东 2（上海）' },
@@ -14,63 +12,36 @@ interface RegionSelectProps {
   onChange: (region: string) => void
 }
 
+// Pure stateless component — no React hooks needed
+// This is a Type A "pure component" that only renders based on props
 export default function RegionSelect({ value, onChange }: RegionSelectProps) {
-  const [open, setOpen] = useState(false)
-
   const selected = REGIONS.find(r => r.id === value)
 
   return (
-    <div style={{ position: 'relative', display: 'inline-block' }}>
-      <button
-        onClick={() => setOpen(!open)}
-        style={{
-          padding: '6px 12px',
-          border: '1px solid #d9d9d9',
-          borderRadius: 6,
-          background: '#fff',
-          cursor: 'pointer',
-          fontSize: 14,
-        }}
-      >
-        {selected ? selected.name : '选择地域'}
-        <span style={{ marginLeft: 8 }}>{open ? '▲' : '▼'}</span>
-      </button>
-      {open && (
-        <ul
+    <div style={{ display: 'inline-flex', gap: 4, alignItems: 'center' }}>
+      <span style={{ fontSize: 13, color: '#666' }}>地域：</span>
+      {REGIONS.map(r => (
+        <button
+          key={r.id}
+          onClick={() => onChange(r.id)}
           style={{
-            position: 'absolute',
-            top: '100%',
-            left: 0,
-            margin: '4px 0',
-            padding: 0,
-            listStyle: 'none',
-            background: '#fff',
-            border: '1px solid #d9d9d9',
-            borderRadius: 6,
-            boxShadow: '0 4px 12px rgba(0,0,0,0.12)',
-            zIndex: 1000,
-            minWidth: 180,
+            padding: '4px 10px',
+            border: '1px solid',
+            borderColor: r.id === value ? '#1677ff' : '#d9d9d9',
+            borderRadius: 4,
+            background: r.id === value ? '#e6f4ff' : '#fff',
+            color: r.id === value ? '#1677ff' : '#333',
+            cursor: 'pointer',
+            fontSize: 13,
+            fontWeight: r.id === value ? 600 : 400,
           }}
         >
-          {REGIONS.map(r => (
-            <li
-              key={r.id}
-              onClick={() => {
-                onChange(r.id)
-                setOpen(false)
-              }}
-              style={{
-                padding: '8px 12px',
-                cursor: 'pointer',
-                background: r.id === value ? '#e6f4ff' : undefined,
-                fontWeight: r.id === value ? 600 : undefined,
-              }}
-            >
-              {r.name}
-            </li>
-          ))}
-        </ul>
-      )}
+          {r.id.replace('cn-', '')}
+        </button>
+      ))}
+      <span style={{ marginLeft: 8, fontSize: 12, color: '#999' }}>
+        ({selected?.name})
+      </span>
     </div>
   )
 }

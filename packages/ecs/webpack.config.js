@@ -42,8 +42,8 @@ module.exports = (env, argv) => {
           './InstanceTable': './src/components/InstanceTable.tsx',
         },
         shared: {
-          react: { singleton: true, requiredVersion: '^18.2.0' },
-          'react-dom': { singleton: true, requiredVersion: '^18.2.0' },
+          react: { singleton: true, requiredVersion: '^18.2.0', eager: true },
+          'react-dom': { singleton: true, requiredVersion: '^18.2.0', eager: true },
           'react-router-dom': { singleton: true, requiredVersion: '^6.20.0' },
         },
       }),

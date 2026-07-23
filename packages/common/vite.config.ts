@@ -4,7 +4,7 @@ import { federation } from '@module-federation/vite'
 
 export default defineConfig({
   plugins: [
-    react({ exclude: [/./] }), // disable React Refresh for remote modules
+    react({ exclude: [/./] }),
     federation({
       name: 'common',
       filename: 'remoteEntry.js',
@@ -19,6 +19,14 @@ export default defineConfig({
       },
     }),
   ],
+  // Tell Vite not to pre-bundle shared deps; MF runtime handles them
+  optimizeDeps: {
+    exclude: ['react', 'react-dom'],
+  },
+  resolve: {
+    // Force shared deps to be treated as external — MF runtime resolves them
+    dedupe: ['react', 'react-dom'],
+  },
   build: {
     rollupOptions: { output: { inlineDynamicImports: false } },
   },

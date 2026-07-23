@@ -4,9 +4,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite build --watch & vite preview --port 3002",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview --port 3002"
   },
   "dependencies": {
     "react": "^18.2.0",
