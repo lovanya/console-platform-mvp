@@ -1,6 +1,6 @@
-import { Routes, Route, Navigate } from 'react-router-dom'
-import InstanceList from './pages/InstanceList'
+import { Navigate, Route, Routes } from 'react-router-dom'
 import InstanceDetail from './pages/InstanceDetail'
+import InstanceList from './pages/InstanceList'
 
 export default function ECSRoutes() {
   return (

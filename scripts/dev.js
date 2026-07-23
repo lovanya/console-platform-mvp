@@ -17,15 +17,15 @@
  * No external dependencies — uses Node's built-in child_process.
  */
 
-const { spawn, spawnSync } = require('child_process')
-const path = require('path')
+const { spawn, spawnSync } = require('node:child_process')
+const path = require('node:path')
 
 const root = path.join(__dirname, '..')
 
 const COLOR = {
   common: '\x1b[34m', // blue
-  ecs: '\x1b[35m',    // magenta
-  shell: '\x1b[36m',  // cyan
+  ecs: '\x1b[35m', // magenta
+  shell: '\x1b[36m', // cyan
   reset: '\x1b[0m',
 }
 
@@ -90,9 +90,24 @@ function main() {
   logHeader('Starting all dev servers')
 
   const procs = {
-    common: startProcess('common', 'npx', ['vite', 'preview', '--port', '3002'], path.join(root, 'packages/common')),
-    ecs: startProcess('ecs', 'npx', ['webpack', 'serve', '--mode', 'development'], path.join(root, 'packages/ecs')),
-    shell: startProcess('shell', 'npx', ['rspack', 'serve', '--mode', 'development'], path.join(root, 'packages/shell')),
+    common: startProcess(
+      'common',
+      'npx',
+      ['vite', 'preview', '--port', '3002'],
+      path.join(root, 'packages/common'),
+    ),
+    ecs: startProcess(
+      'ecs',
+      'npx',
+      ['webpack', 'serve', '--mode', 'development'],
+      path.join(root, 'packages/ecs'),
+    ),
+    shell: startProcess(
+      'shell',
+      'npx',
+      ['rspack', 'serve', '--mode', 'development'],
+      path.join(root, 'packages/shell'),
+    ),
   }
 
   logHeader('All servers started')

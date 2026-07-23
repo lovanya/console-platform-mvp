@@ -1,8 +1,8 @@
-const path = require('path')
+const path = require('node:path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const { ModuleFederationPlugin } = require('@module-federation/enhanced')
 
-module.exports = (env, argv) => {
+module.exports = (_env, argv) => {
   const isDev = argv.mode === 'development'
 
   return {

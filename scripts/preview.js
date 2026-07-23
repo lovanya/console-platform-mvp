@@ -16,8 +16,8 @@
  * to point to localhost. Solution: override via env vars (see below).
  */
 
-const { spawn, spawnSync } = require('child_process')
-const path = require('path')
+const { spawn, spawnSync } = require('node:child_process')
+const path = require('node:path')
 
 const root = path.join(__dirname, '..')
 
@@ -92,24 +92,49 @@ function main() {
   logHeader('Building all packages (production mode)')
 
   // Build common — populates dist/ for vite preview
-  runSync('common', 'npx', ['vite', 'build', '--mode', 'production'], path.join(root, 'packages/common'))
+  runSync(
+    'common',
+    'npx',
+    ['vite', 'build', '--mode', 'production'],
+    path.join(root, 'packages/common'),
+  )
 
   // Build ecs — populates dist/ for static server
   runSync('ecs', 'npx', ['webpack', '--mode', 'production'], path.join(root, 'packages/ecs'))
 
   // Build shell — populates dist/ for static server
-  runSync('shell', 'npx', ['rspack', 'build', '--mode', 'production'], path.join(root, 'packages/shell'))
+  runSync(
+    'shell',
+    'npx',
+    ['rspack', 'build', '--mode', 'production'],
+    path.join(root, 'packages/shell'),
+  )
 
   logHeader('Starting preview servers')
 
   // Common: use vite preview (built-in static server, handles dist/ correctly)
-  const commonServer = run('common', 'npx', ['vite', 'preview', '--port', '3002'], path.join(root, 'packages/common'))
+  const _commonServer = run(
+    'common',
+    'npx',
+    ['vite', 'preview', '--port', '3002'],
+    path.join(root, 'packages/common'),
+  )
 
   // ECS: static server
-  const ecsServer = run('ecs', 'node', [path.join(root, 'scripts/static-server.js'), path.join(root, 'packages/ecs/dist'), '3001'], root)
+  const _ecsServer = run(
+    'ecs',
+    'node',
+    [path.join(root, 'scripts/static-server.js'), path.join(root, 'packages/ecs/dist'), '3001'],
+    root,
+  )
 
   // Shell: static server
-  const shellServer = run('shell', 'node', [path.join(root, 'scripts/static-server.js'), path.join(root, 'packages/shell/dist'), '3000'], root)
+  const shellServer = run(
+    'shell',
+    'node',
+    [path.join(root, 'scripts/static-server.js'), path.join(root, 'packages/shell/dist'), '3000'],
+    root,
+  )
 
   logHeader('Preview running')
   console.log(colorize('common', `  common:  http://localhost:3002`))
@@ -118,8 +143,9 @@ function main() {
   console.log('\n  Press Ctrl+C to stop.\n')
 
   const cleanup = () => {
-    console.log('\nShutting down...')
-    [commonServer, ecsServer, shellServer].forEach((p) => p.kill('SIGTERM'))
+    console
+      .log('\nShutting down...')
+      [(_commonServer, _ecsServer, shellServer)].forEach((p) => p.kill('SIGTERM'))
     setTimeout(() => process.exit(0), 500)
   }
 

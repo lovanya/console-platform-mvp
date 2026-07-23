@@ -1,6 +1,6 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
-import ShellLayout from './components/ShellLayout'
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import ProductPage from './components/ProductPage'
+import ShellLayout from './components/ShellLayout'
 
 export default function App() {
   return (

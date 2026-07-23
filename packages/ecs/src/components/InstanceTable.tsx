@@ -1,5 +1,9 @@
 interface Instance {
-  id: string; name: string; status: string; region: string; spec: string
+  id: string
+  name: string
+  status: string
+  region: string
+  spec: string
 }
 
 interface InstanceTableProps {
@@ -20,7 +24,7 @@ export default function InstanceTable({ instances, onSelect }: InstanceTableProp
         </tr>
       </thead>
       <tbody>
-        {instances.map(inst => (
+        {instances.map((inst) => (
           <tr
             key={inst.id}
             onClick={() => onSelect?.(inst.id)}

@@ -1,6 +1,6 @@
-import { useParams } from 'react-router-dom'
-import { Suspense, lazy } from 'react'
 import type { ComponentType } from 'react'
+import { lazy, Suspense } from 'react'
+import { useParams } from 'react-router-dom'
 
 const productRoutes: Record<string, React.LazyExoticComponent<ComponentType<any>>> = {
   ecs: lazy(() => import('ecs/routes')),

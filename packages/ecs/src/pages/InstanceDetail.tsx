@@ -1,4 +1,4 @@
-import { useParams, Link } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 
 export default function InstanceDetail() {
   const { id } = useParams()
@@ -6,12 +6,17 @@ export default function InstanceDetail() {
   return (
     <div>
       <div style={{ marginBottom: 16 }}>
-        <Link to="/products/ecs/instances" style={{ color: '#1677ff', textDecoration: 'none', fontSize: 14 }}>
+        <Link
+          to="/products/ecs/instances"
+          style={{ color: '#1677ff', textDecoration: 'none', fontSize: 14 }}
+        >
           ← 返回实例列表
         </Link>
       </div>
       <h2 style={{ margin: '0 0 24px 0' }}>实例详情: {id}</h2>
-      <div style={{ padding: 24, border: '1px solid #f0f0f0', borderRadius: 8, background: '#fafafa' }}>
+      <div
+        style={{ padding: 24, border: '1px solid #f0f0f0', borderRadius: 8, background: '#fafafa' }}
+      >
         <InfoRow label="实例 ID" value={id || '-'} />
         <InfoRow label="实例名称" value="web-server-01" />
         <InfoRow label="状态" value="Running" />
@@ -29,7 +34,14 @@ export default function InstanceDetail() {
 
 function InfoRow({ label, value }: { label: string; value: string }) {
   return (
-    <div style={{ display: 'flex', padding: '10px 0', borderBottom: '1px solid #f0f0f0', fontSize: 14 }}>
+    <div
+      style={{
+        display: 'flex',
+        padding: '10px 0',
+        borderBottom: '1px solid #f0f0f0',
+        fontSize: 14,
+      }}
+    >
       <div style={{ width: 120, color: '#666' }}>{label}</div>
       <div style={{ color: '#333' }}>{value}</div>
     </div>

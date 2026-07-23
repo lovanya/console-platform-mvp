@@ -6,9 +6,9 @@
  * Usage: node scripts/static-server.js <root-dir> <port>
  */
 
-const http = require('http')
-const fs = require('fs')
-const path = require('path')
+const http = require('node:http')
+const fs = require('node:fs')
+const path = require('node:path')
 
 const root = path.resolve(process.argv[2])
 const port = parseInt(process.argv[3], 10)

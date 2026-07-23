@@ -15,13 +15,14 @@ interface RegionSelectProps {
 // Pure stateless component — no React hooks needed
 // This is a Type A "pure component" that only renders based on props
 export default function RegionSelect({ value, onChange }: RegionSelectProps) {
-  const selected = REGIONS.find(r => r.id === value)
+  const selected = REGIONS.find((r) => r.id === value)
 
   return (
     <div style={{ display: 'inline-flex', gap: 4, alignItems: 'center' }}>
       <span style={{ fontSize: 13, color: '#666' }}>地域：</span>
-      {REGIONS.map(r => (
+      {REGIONS.map((r) => (
         <button
+          type="button"
           key={r.id}
           onClick={() => onChange(r.id)}
           style={{
@@ -39,9 +40,7 @@ export default function RegionSelect({ value, onChange }: RegionSelectProps) {
           {r.id.replace('cn-', '')}
         </button>
       ))}
-      <span style={{ marginLeft: 8, fontSize: 12, color: '#999' }}>
-        ({selected?.name})
-      </span>
+      <span style={{ marginLeft: 8, fontSize: 12, color: '#999' }}>({selected?.name})</span>
     </div>
   )
 }

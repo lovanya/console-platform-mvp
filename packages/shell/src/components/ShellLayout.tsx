@@ -1,6 +1,5 @@
-import React from 'react'
-import { Outlet, Link, useParams } from 'react-router-dom'
-import { Suspense, lazy } from 'react'
+import React, { lazy, Suspense } from 'react'
+import { Link, Outlet, useParams } from 'react-router-dom'
 
 const PRODUCTS = [
   { id: 'ecs', name: 'ECS 云服务器', icon: '🖥' },
@@ -31,14 +30,33 @@ export default function ShellLayout() {
 
 function Sidebar({ currentProduct }: { currentProduct?: string }) {
   return (
-    <div style={{ width: 220, background: '#001529', color: '#fff', display: 'flex', flexDirection: 'column' }}>
+    <div
+      style={{
+        width: 220,
+        background: '#001529',
+        color: '#fff',
+        display: 'flex',
+        flexDirection: 'column',
+      }}
+    >
       <div style={{ padding: '20px 16px', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
         <div style={{ fontSize: 18, fontWeight: 700 }}>云控制台</div>
-        <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.45)', marginTop: 4 }}>Cloud Console</div>
+        <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.45)', marginTop: 4 }}>
+          Cloud Console
+        </div>
       </div>
       <nav style={{ flex: 1, padding: '8px 0' }}>
-        <div style={{ padding: '8px 16px', fontSize: 12, color: 'rgba(255,255,255,0.45)', textTransform: 'uppercase' }}>产品与服务</div>
-        {PRODUCTS.map(p => (
+        <div
+          style={{
+            padding: '8px 16px',
+            fontSize: 12,
+            color: 'rgba(255,255,255,0.45)',
+            textTransform: 'uppercase',
+          }}
+        >
+          产品与服务
+        </div>
+        {PRODUCTS.map((p) => (
           <Link
             key={p.id}
             to={p.id === 'ecs' ? `/products/${p.id}/instances` : `/products/${p.id}`}
@@ -68,17 +86,21 @@ function TopBar() {
   const [region, setRegion] = React.useState('cn-hangzhou')
 
   return (
-    <div style={{
-      height: 48,
-      background: '#fff',
-      borderBottom: '1px solid #e8e8e8',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      padding: '0 24px',
-    }}>
+    <div
+      style={{
+        height: 48,
+        background: '#fff',
+        borderBottom: '1px solid #e8e8e8',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        padding: '0 24px',
+      }}
+    >
       <div style={{ fontSize: 14, color: '#333' }}>
-        <Link to="/" style={{ color: '#333', textDecoration: 'none' }}>首页</Link>
+        <Link to="/" style={{ color: '#333', textDecoration: 'none' }}>
+          首页
+        </Link>
         <span style={{ margin: '0 8px', color: '#ccc' }}>/</span>
         <span>云服务器 ECS</span>
       </div>
@@ -91,4 +113,3 @@ function TopBar() {
     </div>
   )
 }
-

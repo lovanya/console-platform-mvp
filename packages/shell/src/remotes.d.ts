@@ -5,7 +5,11 @@ declare module 'ecs/routes' {
 
 declare module 'ecs/InstanceTable' {
   interface Instance {
-    id: string; name: string; status: string; region: string; spec: string
+    id: string
+    name: string
+    status: string
+    region: string
+    spec: string
   }
   interface InstanceTableProps {
     instances: Instance[]

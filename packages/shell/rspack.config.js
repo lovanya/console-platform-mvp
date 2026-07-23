@@ -1,4 +1,4 @@
-const path = require('path')
+const path = require('node:path')
 const rspack = require('@rspack/core')
 const { ModuleFederationPlugin } = require('@module-federation/rspack')
 

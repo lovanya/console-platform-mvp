@@ -33,7 +33,7 @@ export class EventBus {
     if (!this.listeners.has(event)) {
       this.listeners.set(event, new Set())
     }
-    this.listeners.get(event)!.add(handler)
+    this.listeners.get(event)?.add(handler)
     return () => this.off(event, handler)
   }
 
@@ -42,7 +42,7 @@ export class EventBus {
   }
 
   emit<N extends EventName>(event: N, payload: EventPayloads[N]) {
-    this.listeners.get(event)?.forEach(handler => handler(payload))
+    this.listeners.get(event)?.forEach((handler) => handler(payload))
   }
 }
 

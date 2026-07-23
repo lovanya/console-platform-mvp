@@ -11,7 +11,9 @@
     "rootDir": "./src",
     "baseUrl": ".",
     "paths": {
-      "@console/shared": ["../shared/src"]
+      "@console/shared": ["../shared/src"],
+      "react/jsx-runtime": ["../../node_modules/@types/react/jsx-runtime.d.ts"],
+      "react/jsx-dev-runtime": ["../../node_modules/@types/react/jsx-dev-runtime.d.ts"]
     }
   },
   "include": ["src"]
