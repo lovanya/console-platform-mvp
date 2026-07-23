@@ -42,6 +42,13 @@ module.exports = {
     ],
   },
   plugins: [
+    // Force React to load the production JSX runtime even in dev mode.
+    // React 18.3's .development.js variants have edge cases that
+    // trigger 'Cannot read properties of undefined (reading call)'
+    // during module init when MF shared singleton is involved.
+    new rspack.DefinePlugin({
+      'process.env.NODE_ENV': JSON.stringify('production'),
+    }),
     new ModuleFederationPlugin({
       name: 'shell',
       remotes: {
