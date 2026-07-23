@@ -2,7 +2,9 @@ const path = require('path')
 const rspack = require('@rspack/core')
 const { ModuleFederationPlugin } = require('@module-federation/rspack')
 
-const isDev = process.env.NODE_ENV !== 'production'
+// NODE_ENV=production AND no PREVIEW_LOCAL flag → use CDN URLs (real production)
+// PREVIEW_LOCAL=1 OR NODE_ENV != 'production' → use localhost URLs (dev or local preview)
+const isDev = process.env.NODE_ENV !== 'production' || process.env.PREVIEW_LOCAL === '1'
 
 module.exports = {
   entry: path.resolve(__dirname, './src/index.tsx'),
