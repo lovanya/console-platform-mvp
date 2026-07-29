@@ -37,3 +37,13 @@ declare module 'common/PriceBadge' {
   const PriceBadge: React.FC<PriceBadgeProps>
   export default PriceBadge
 }
+
+declare module 'billing/bootstrap' {
+  interface MountProps {
+    container: HTMLElement | string
+    basename?: string
+  }
+  export function bootstrap(props: MountProps): Promise<void>
+  export function mount(props: MountProps): Promise<unknown>
+  export function unmount(props?: MountProps): Promise<void>
+}

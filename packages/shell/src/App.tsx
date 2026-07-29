@@ -1,6 +1,6 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import ProductPage from './components/ProductPage'
-import ShellLayout from './components/ShellLayout'
+import ShellLayout, { BillingSlot } from './components/ShellLayout'
 
 export default function App() {
   return (
@@ -9,6 +9,7 @@ export default function App() {
         <Route path="/" element={<ShellLayout />}>
           <Route index element={<Dashboard />} />
           <Route path="products/:productId/*" element={<ProductPage />} />
+          <Route path="billing/*" element={<BillingSlot />} />
         </Route>
       </Routes>
     </BrowserRouter>

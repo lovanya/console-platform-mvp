@@ -7,15 +7,17 @@
     "dev:shell": "pnpm --filter shell dev",
     "dev:ecs": "pnpm --filter ecs dev",
     "dev:common": "pnpm --filter common dev",
+    "dev:billing": "pnpm --filter billing dev",
     "build": "pnpm -r build",
     "build:shell": "pnpm --filter shell build",
     "build:ecs": "pnpm --filter ecs build",
     "build:common": "pnpm --filter common build",
+    "build:billing": "pnpm --filter billing build",
     "lint": "biome lint",
     "format": "biome format --write",
     "check": "biome check --write",
     "check:ci": "biome check",
-    "typecheck": "pnpm --filter shell typecheck && pnpm --filter ecs typecheck && pnpm --filter common typecheck",
+    "typecheck": "pnpm --filter shell typecheck && pnpm --filter ecs typecheck && pnpm --filter common typecheck && pnpm --filter billing typecheck",
     "prepare": "node scripts/install-hooks.js"
   },
   "engines": {

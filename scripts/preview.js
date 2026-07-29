@@ -99,6 +99,14 @@ function main() {
     path.join(root, 'packages/common'),
   )
 
+  // Build billing — populates dist/ for vite preview
+  runSync(
+    'billing',
+    'npx',
+    ['vite', 'build', '--mode', 'production'],
+    path.join(root, 'packages/billing'),
+  )
+
   // Build ecs — populates dist/ for static server
   runSync('ecs', 'npx', ['webpack', '--mode', 'production'], path.join(root, 'packages/ecs'))
 
@@ -120,6 +128,14 @@ function main() {
     path.join(root, 'packages/common'),
   )
 
+  // Billing: use vite preview
+  const _billingServer = run(
+    'billing',
+    'npx',
+    ['vite', 'preview', '--port', '3003'],
+    path.join(root, 'packages/billing'),
+  )
+
   // ECS: static server
   const _ecsServer = run(
     'ecs',
@@ -138,6 +154,7 @@ function main() {
 
   logHeader('Preview running')
   console.log(colorize('common', `  common:  http://localhost:3002`))
+  console.log(colorize('billing', `  billing: http://localhost:3003`))
   console.log(colorize('ecs', `  ecs:     http://localhost:3001`))
   console.log(colorize('shell', `  shell:   http://localhost:3000  ← open this`))
   console.log('\n  Press Ctrl+C to stop.\n')
@@ -145,7 +162,7 @@ function main() {
   const cleanup = () => {
     console
       .log('\nShutting down...')
-      [(_commonServer, _ecsServer, shellServer)].forEach((p) => p.kill('SIGTERM'))
+      [(_commonServer, _billingServer, _ecsServer, shellServer)].forEach((p) => p.kill('SIGTERM'))
     setTimeout(() => process.exit(0), 500)
   }
 

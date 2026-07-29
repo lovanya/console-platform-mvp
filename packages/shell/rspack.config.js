@@ -63,6 +63,9 @@ module.exports = {
         common: isDev
           ? 'common@http://localhost:3002/remoteEntry.var.js'
           : 'common@https://cdn.console.aliyun.com/common/remoteEntry.var.js',
+        billing: isDev
+          ? 'billing@http://localhost:3003/remoteEntry.js'
+          : 'billing@https://cdn.console.aliyun.com/billing/remoteEntry.js',
       },
       shared: {
         react: { singleton: true, requiredVersion: '^18.2.0', eager: true },

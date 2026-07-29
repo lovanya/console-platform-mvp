@@ -1,0 +1,25 @@
+{
+  "name": "@console/billing",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite build && vite preview --port 3003",
+    "build": "vite build",
+    "preview": "vite preview --port 3003",
+    "typecheck": "vue-tsc --noEmit"
+  },
+  "dependencies": {
+    "vue": "^3.5.0",
+    "vue-router": "^4.4.0",
+    "pinia": "^2.2.0",
+    "@console/shared": "workspace:*"
+  },
+  "devDependencies": {
+    "@module-federation/vite": "^1.16.0",
+    "@vitejs/plugin-vue": "^5.1.0",
+    "typescript": "^5.4.0",
+    "vite": "^5.4.0",
+    "vue-tsc": "^2.1.0"
+  }
+}

@@ -72,14 +72,25 @@ function startProcess(name, cmd, args, cwd) {
 }
 
 function buildCommonSync() {
-  logHeader('Building common (synchronous, populates dist/)')
-  const result = spawnSync('npx', ['vite', 'build'], {
+  logHeader('Building common and billing (synchronous, populates dist/)')
+
+  const common = spawnSync('npx', ['vite', 'build'], {
     cwd: path.join(root, 'packages/common'),
     stdio: 'inherit',
     shell: true,
   })
-  if (result.status !== 0) {
+  if (common.status !== 0) {
     console.error('common build failed, aborting')
+    process.exit(1)
+  }
+
+  const billing = spawnSync('npx', ['vite', 'build'], {
+    cwd: path.join(root, 'packages/billing'),
+    stdio: 'inherit',
+    shell: true,
+  })
+  if (billing.status !== 0) {
+    console.error('billing build failed, aborting')
     process.exit(1)
   }
 }
@@ -108,11 +119,18 @@ function main() {
       ['rspack', 'serve', '--mode', 'development'],
       path.join(root, 'packages/shell'),
     ),
+    billing: startProcess(
+      'billing',
+      'npx',
+      ['vite', 'preview', '--port', '3003'],
+      path.join(root, 'packages/billing'),
+    ),
   }
 
   logHeader('All servers started')
   console.log(colorize('common', `  common:  http://localhost:3002`))
   console.log(colorize('ecs', `  ecs:     http://localhost:3001`))
+  console.log(colorize('billing', `  billing: http://localhost:3003`))
   console.log(colorize('shell', `  shell:   http://localhost:3000  ← open this`))
   console.log('\n  Press Ctrl+C to stop all servers.\n')
 

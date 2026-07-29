@@ -1,5 +1,5 @@
-import React, { lazy, Suspense } from 'react'
-import { Link, Outlet, useParams } from 'react-router-dom'
+import React, { lazy, Suspense, useEffect, useRef } from 'react'
+import { Link, matchPath, Outlet, useLocation, useParams } from 'react-router-dom'
 
 const PRODUCTS = [
   { id: 'ecs', name: 'ECS 云服务器', icon: '🖥' },
@@ -8,16 +8,23 @@ const PRODUCTS = [
   { id: 'slb', name: 'SLB 负载均衡', icon: '⚖' },
 ]
 
+const CROSS_PRODUCTS = [
+  { id: 'billing', name: '计费中心', icon: '💰', path: '/billing' },
+  { id: 'workorder', name: '工单系统', icon: '🎫', path: '/workorder' },
+]
+
 const RegionSelect = lazy(() => import('common/RegionSelect'))
 
 export default function ShellLayout() {
   const { productId } = useParams()
+  const location = useLocation()
+  const isBilling = !!matchPath('/billing/*', location.pathname)
 
   return (
     <div style={{ display: 'flex', height: '100vh', fontFamily: '-apple-system, sans-serif' }}>
       <Sidebar currentProduct={productId} />
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-        <TopBar />
+        <TopBar breadcrumb={isBilling ? '计费中心' : '云服务器 ECS'} />
         <div style={{ flex: 1, overflow: 'auto', background: '#f5f5f5' }}>
           <Suspense fallback={<div style={{ padding: 24, color: '#999' }}>加载中...</div>}>
             <Outlet />
@@ -29,6 +36,8 @@ export default function ShellLayout() {
 }
 
 function Sidebar({ currentProduct }: { currentProduct?: string }) {
+  const location = useLocation()
+
   return (
     <div
       style={{
@@ -77,12 +86,44 @@ function Sidebar({ currentProduct }: { currentProduct?: string }) {
             <span>{p.name}</span>
           </Link>
         ))}
+        <div
+          style={{
+            padding: '8px 16px',
+            marginTop: 16,
+            fontSize: 12,
+            color: 'rgba(255,255,255,0.45)',
+            textTransform: 'uppercase',
+          }}
+        >
+          跨产品
+        </div>
+        {CROSS_PRODUCTS.map((p) => (
+          <Link
+            key={p.id}
+            to={p.path}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 10,
+              padding: '10px 16px',
+              color: location.pathname.startsWith(p.path) ? '#fff' : 'rgba(255,255,255,0.75)',
+              background: location.pathname.startsWith(p.path) ? '#1677ff' : undefined,
+              textDecoration: 'none',
+              fontSize: 14,
+              margin: '2px 8px',
+              borderRadius: 6,
+            }}
+          >
+            <span>{p.icon}</span>
+            <span>{p.name}</span>
+          </Link>
+        ))}
       </nav>
     </div>
   )
 }
 
-function TopBar() {
+function TopBar({ breadcrumb }: { breadcrumb: string }) {
   const [region, setRegion] = React.useState('cn-hangzhou')
 
   return (
@@ -102,7 +143,7 @@ function TopBar() {
           首页
         </Link>
         <span style={{ margin: '0 8px', color: '#ccc' }}>/</span>
-        <span>云服务器 ECS</span>
+        <span>{breadcrumb}</span>
       </div>
       <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
         <Suspense fallback={<span style={{ color: '#999', fontSize: 13 }}>地域...</span>}>
@@ -112,4 +153,38 @@ function TopBar() {
       </div>
     </div>
   )
+}
+
+export function BillingSlot() {
+  const containerRef = useRef<HTMLDivElement>(null)
+  const appRef = useRef<unknown>(null)
+  const location = useLocation()
+
+  useEffect(() => {
+    if (!containerRef.current) return
+
+    let mounted = true
+    let unmountFn: (() => Promise<void>) | null = null
+
+    const loadAndMount = async () => {
+      const { mount, unmount } = await import('billing/bootstrap')
+      if (!mounted) return
+      await unmount()
+      appRef.current = await mount({
+        container: containerRef.current!,
+        basename: '/billing',
+      })
+      unmountFn = unmount
+    }
+
+    loadAndMount()
+
+    return () => {
+      mounted = false
+      if (!location.pathname.startsWith('/billing')) return
+      unmountFn?.()
+    }
+  }, [location.pathname])
+
+  return <div ref={containerRef} style={{ padding: 24 }} />
 }
