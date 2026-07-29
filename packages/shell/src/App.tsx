@@ -1,26 +1,33 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import ProductPage from './components/ProductPage'
-import ShellLayout, { BillingSlot } from './components/ShellLayout'
+import { lazy } from 'react'
+import { BrowserRouter } from 'react-router-dom'
+import BillingSlot from './components/BillingSlot'
+import ShellLayout from './components/ShellLayout'
+import { AppRouter, type RouteConfig } from './router/AppRouter'
+
+const Dashboard = lazy(() => import('./Dashboard'))
+
+const routes: RouteConfig[] = [
+  {
+    path: '/',
+    component: ShellLayout,
+    children: [
+      { path: '', component: Dashboard },
+      {
+        path: 'products/:productId/*',
+        loader: () => import('ecs/routes'),
+      },
+      {
+        path: 'billing/*',
+        component: BillingSlot,
+      },
+    ],
+  },
+]
 
 export default function App() {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<ShellLayout />}>
-          <Route index element={<Dashboard />} />
-          <Route path="products/:productId/*" element={<ProductPage />} />
-          <Route path="billing/*" element={<BillingSlot />} />
-        </Route>
-      </Routes>
+      <AppRouter routes={routes} />
     </BrowserRouter>
-  )
-}
-
-function Dashboard() {
-  return (
-    <div style={{ padding: 24 }}>
-      <h1>云控制台首页</h1>
-      <p style={{ color: '#666' }}>选择左侧产品开始管理云资源</p>
-    </div>
   )
 }

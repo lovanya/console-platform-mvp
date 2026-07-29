@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useEffect, useRef } from 'react'
+import React, { lazy, Suspense } from 'react'
 import { Link, matchPath, Outlet, useLocation, useParams } from 'react-router-dom'
 
 const PRODUCTS = [
@@ -155,36 +155,4 @@ function TopBar({ breadcrumb }: { breadcrumb: string }) {
   )
 }
 
-export function BillingSlot() {
-  const containerRef = useRef<HTMLDivElement>(null)
-  const appRef = useRef<unknown>(null)
-  const location = useLocation()
-
-  useEffect(() => {
-    if (!containerRef.current) return
-
-    let mounted = true
-    let unmountFn: (() => Promise<void>) | null = null
-
-    const loadAndMount = async () => {
-      const { mount, unmount } = await import('billing/bootstrap')
-      if (!mounted) return
-      await unmount()
-      appRef.current = await mount({
-        container: containerRef.current!,
-        basename: '/billing',
-      })
-      unmountFn = unmount
-    }
-
-    loadAndMount()
-
-    return () => {
-      mounted = false
-      if (!location.pathname.startsWith('/billing')) return
-      unmountFn?.()
-    }
-  }, [location.pathname])
-
-  return <div ref={containerRef} style={{ padding: 24 }} />
-}
+export { default as BillingSlot } from './BillingSlot'
