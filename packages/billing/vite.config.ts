@@ -8,6 +8,7 @@ export default defineConfig({
     federation({
       name: 'billing',
       filename: 'remoteEntry.js',
+      varFilename: 'remoteEntry.var.js',
       exposes: {
         './bootstrap': './src/bootstrap.ts',
       },
@@ -17,6 +18,7 @@ export default defineConfig({
         pinia: { singleton: true },
         '@console/shared': { singleton: true },
       },
+      dts: false, // Disable DTS for Vue SFCs (vue-tsc handles it separately)
     }),
   ],
   build: {

@@ -47,13 +47,6 @@ module.exports = {
     ],
   },
   plugins: [
-    // Force React to load the production JSX runtime even in dev mode.
-    // React 18.3's .development.js variants have edge cases that
-    // trigger 'Cannot read properties of undefined (reading call)'
-    // during module init when MF shared singleton is involved.
-    new rspack.DefinePlugin({
-      'process.env.NODE_ENV': JSON.stringify('production'),
-    }),
     new ModuleFederationPlugin({
       name: 'shell',
       remotes: {
@@ -64,8 +57,8 @@ module.exports = {
           ? 'common@http://localhost:3002/remoteEntry.var.js'
           : 'common@https://cdn.console.aliyun.com/common/remoteEntry.var.js',
         billing: isDev
-          ? 'billing@http://localhost:3003/remoteEntry.js'
-          : 'billing@https://cdn.console.aliyun.com/billing/remoteEntry.js',
+          ? 'billing@http://localhost:3003/remoteEntry.var.js'
+          : 'billing@https://cdn.console.aliyun.com/billing/remoteEntry.var.js',
       },
       shared: {
         react: { singleton: true, requiredVersion: '^18.2.0', eager: true },
