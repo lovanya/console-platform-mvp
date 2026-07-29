@@ -37,16 +37,22 @@ export default defineConfig({
       },
     }),
   ],
-  // Tell Vite not to pre-bundle shared deps; MF runtime handles them
   optimizeDeps: {
-    exclude: ['react', 'react-dom'],
+    exclude: ['react', 'react-dom', 'react-router-dom'],
   },
   resolve: {
-    // Force shared deps to be treated as external — MF runtime resolves them
-    dedupe: ['react', 'react-dom'],
+    dedupe: ['react', 'react-dom', 'react-router-dom'],
   },
   build: {
-    rollupOptions: { output: { inlineDynamicImports: false } },
+    rollupOptions: {
+      // Externalize React + react-dom + react-router-dom so they're NOT
+      // inlined in common's bundle. Without this, common's bundle has its
+      // own copy of React with its own ReactCurrentDispatcher, which
+      // is never set (only Shell's React has it set via ReactDOM.render).
+      // Result: 'Cannot read properties of null (reading useContext)'.
+      external: ['react', 'react-dom', 'react-router-dom'],
+      output: { inlineDynamicImports: false },
+    },
   },
   server: { port: 3002 },
 })
