@@ -26,19 +26,17 @@ export async function mount(props: MountProps) {
 
   const app = createApp(App)
   const pinia = createPinia()
-  const router = createAppRouter()
 
-  // Sync with Shell's basename if provided
-  if (props.basename) {
-    router.options.history = createWebHistoryWithBasename(props.basename)
-  }
+  // Pass basename to router so it strips the prefix from window.location.pathname
+  // e.g., '/billing/overview' with basename '/billing' → Vue sees '/overview'
+  const router = createAppRouter(props.basename)
 
   app.use(pinia)
   app.use(router)
   app.mount(container)
   appInstance = app
 
-  console.log('[billing] mounted to', container)
+  console.log('[billing] mounted to', container, 'basename:', props.basename)
   return app
 }
 
@@ -49,9 +47,3 @@ export async function unmount(_props?: MountProps) {
     console.log('[billing] unmounted')
   }
 }
-
-function createWebHistoryWithBasename(basename: string) {
-  return createWebHashHistory(basename)
-}
-
-import { createWebHashHistory } from 'vue-router'
