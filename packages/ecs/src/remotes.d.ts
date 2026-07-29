@@ -1,8 +1,4 @@
-declare module 'ecs/routes' {
-  const Routes: React.ComponentType
-  export default Routes
-}
-
+// Module declarations for MF remotes (common package)
 declare module 'common/RegionSelect' {
   interface RegionSelectProps {
     value: string
@@ -46,22 +42,13 @@ declare module 'common/Table' {
     title: React.ReactNode
     align?: 'left' | 'right' | 'center'
     width?: number | string
+    render?: (value: unknown, row: Record<string, unknown>) => React.ReactNode
   }
   interface TableProps {
     columns: Column[]
-    data: Record<string, React.ReactNode>[]
+    data: Record<string, unknown>[]
     rowKey?: string
   }
   const Table: React.FC<TableProps>
   export default Table
-}
-
-declare module 'billing/bootstrap' {
-  interface MountProps {
-    container: HTMLElement | string
-    basename?: string
-  }
-  export function bootstrap(props: MountProps): Promise<void>
-  export function mount(props: MountProps): Promise<unknown>
-  export function unmount(props?: MountProps): Promise<void>
 }

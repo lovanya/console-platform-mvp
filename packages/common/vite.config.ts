@@ -12,6 +12,9 @@ export default defineConfig({
       exposes: {
         './RegionSelect': './src/RegionSelect.tsx',
         './PriceBadge': './src/PriceBadge.tsx',
+        './LoadingFallback': './src/components/LoadingFallback.tsx',
+        './Card': './src/components/Card.tsx',
+        './Table': './src/components/Table.tsx',
       },
       shared: {
         react: { singleton: true },

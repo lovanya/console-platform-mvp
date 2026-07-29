@@ -39,7 +39,6 @@ module.exports = (_env, argv) => {
         filename: 'remoteEntry.js',
         exposes: {
           './routes': './src/router.tsx',
-          './InstanceTable': './src/components/InstanceTable.tsx',
         },
         shared: {
           // singleton: get from host's shared scope, no fallback bundle
