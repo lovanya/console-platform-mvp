@@ -42,20 +42,45 @@ module.exports = (_env, argv) => {
           './InstanceTable': './src/components/InstanceTable.tsx',
         },
         shared: {
-          react: { singleton: true, requiredVersion: '^18.2.0', eager: true },
-          'react-dom': { singleton: true, requiredVersion: '^18.2.0', eager: true },
-          'react-router-dom': { singleton: true, requiredVersion: '^6.20.0', eager: true },
+          // singleton: get from host's shared scope, no fallback bundle
+          // packageName + version required for shared scope resolution
+          react: {
+            singleton: true,
+            requiredVersion: '^18.2.0',
+            eager: true,
+            packageName: 'react',
+          },
+          'react-dom': {
+            singleton: true,
+            requiredVersion: '^18.2.0',
+            eager: true,
+            packageName: 'react-dom',
+          },
+          'react-router-dom': {
+            singleton: true,
+            requiredVersion: '^6.20.0',
+            eager: true,
+            packageName: 'react-router-dom',
+          },
         },
       }),
       new HtmlWebpackPlugin({
         template: path.resolve(__dirname, './public/index.html'),
       }),
     ],
+    optimization: {
+      splitChunks: false, // MF handles code splitting at runtime
+    },
     devServer: {
       port: 3001,
       historyApiFallback: true,
       hot: true,
     },
-    devtool: isDev ? 'eval-cheap-module-source-map' : false,
+    // Use cheap-module-source-map in dev (not eval-source-map which inlines)
+    // This produces external .map files instead of 5MB inline data
+    devtool: isDev ? 'cheap-module-source-map' : false,
+    performance: {
+      hints: false,
+    },
   }
 }

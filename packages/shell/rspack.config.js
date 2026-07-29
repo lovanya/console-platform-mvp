@@ -61,9 +61,24 @@ module.exports = {
           : 'billing@https://cdn.console.aliyun.com/billing/remoteEntry.var.js',
       },
       shared: {
-        react: { singleton: true, requiredVersion: '^18.2.0', eager: true },
-        'react-dom': { singleton: true, requiredVersion: '^18.2.0', eager: true },
-        'react-router-dom': { singleton: true, requiredVersion: '^6.20.0' },
+        react: {
+          singleton: true,
+          requiredVersion: '^18.2.0',
+          eager: true,
+          packageName: 'react',
+        },
+        'react-dom': {
+          singleton: true,
+          requiredVersion: '^18.2.0',
+          eager: true,
+          packageName: 'react-dom',
+        },
+        'react-router-dom': {
+          singleton: true,
+          requiredVersion: '^6.20.0',
+          eager: true,
+          packageName: 'react-router-dom',
+        },
       },
     }),
     new rspack.HtmlRspackPlugin({
@@ -79,4 +94,7 @@ module.exports = {
     outputModule: true,
   },
   devtool: isDev ? 'cheap-module-source-map' : false,
+  performance: {
+    hints: false,
+  },
 }
