@@ -15,10 +15,12 @@ export default defineConfig({
         './LoadingFallback': './src/components/LoadingFallback.tsx',
         './Card': './src/components/Card.tsx',
         './Table': './src/components/Table.tsx',
+        './AppRouter': './src/router/AppRouter.tsx',
       },
       shared: {
         react: { singleton: true },
         'react-dom': { singleton: true },
+        'react-router-dom': { singleton: true, requiredVersion: '^6.20.0' },
       },
     }),
   ],

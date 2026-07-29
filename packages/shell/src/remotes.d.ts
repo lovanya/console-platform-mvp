@@ -46,6 +46,7 @@ declare module 'common/Table' {
     title: React.ReactNode
     align?: 'left' | 'right' | 'center'
     width?: number | string
+    render?: (value: unknown, row: Record<string, unknown>) => React.ReactNode
   }
   interface TableProps {
     columns: Column[]
@@ -54,6 +55,25 @@ declare module 'common/Table' {
   }
   const Table: React.FC<TableProps>
   export default Table
+}
+
+declare module 'common/AppRouter' {
+  // biome-ignore lint/suspicious/noExplicitAny: dynamic imports vary in default export shape
+  type Loader = () => Promise<{ default: any }>
+  type RouteConfig = {
+    path?: string
+    index?: boolean
+    component?: React.ComponentType
+    loader?: Loader
+    element?: React.ReactNode
+    children?: RouteConfig[]
+  }
+  interface AppRouterProps {
+    routes: RouteConfig[]
+    fallback?: React.ReactNode
+  }
+  export const AppRouter: React.FC<AppRouterProps>
+  export type { Loader, RouteConfig }
 }
 
 declare module 'billing/bootstrap' {

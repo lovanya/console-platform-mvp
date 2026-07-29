@@ -1,10 +1,11 @@
-import { lazy } from 'react'
+import type { RouteConfig } from 'common/AppRouter'
+import { lazy, Suspense } from 'react'
 import { BrowserRouter } from 'react-router-dom'
 import BillingSlot from './components/BillingSlot'
 import ShellLayout from './components/ShellLayout'
-import { AppRouter, type RouteConfig } from './router/AppRouter'
 
 const Dashboard = lazy(() => import('./Dashboard'))
+const AppRouter = lazy(() => import('common/AppRouter').then((m) => ({ default: m.AppRouter })))
 
 const routes: RouteConfig[] = [
   {
@@ -27,7 +28,9 @@ const routes: RouteConfig[] = [
 export default function App() {
   return (
     <BrowserRouter>
-      <AppRouter routes={routes} />
+      <Suspense fallback={<div style={{ padding: 24, color: '#999' }}>加载中...</div>}>
+        <AppRouter routes={routes} />
+      </Suspense>
     </BrowserRouter>
   )
 }
