@@ -18,9 +18,22 @@ export default defineConfig({
         './AppRouter': './src/router/AppRouter.tsx',
       },
       shared: {
-        react: { singleton: true },
-        'react-dom': { singleton: true },
-        'react-router-dom': { singleton: true, requiredVersion: '^6.20.0' },
+        react: {
+          singleton: true,
+          eager: true,
+          packageName: 'react',
+        },
+        'react-dom': {
+          singleton: true,
+          eager: true,
+          packageName: 'react-dom',
+        },
+        'react-router-dom': {
+          singleton: true,
+          eager: true,
+          requiredVersion: '^6.20.0',
+          packageName: 'react-router-dom',
+        },
       },
     }),
   ],
