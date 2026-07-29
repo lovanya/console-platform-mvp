@@ -2,6 +2,7 @@
 /**
  * Minimal static file server for production-like preview.
  * Serves any directory via HTTP without dependencies.
+ * Supports gzip compression for text-based MIME types.
  *
  * Usage: node scripts/static-server.js <root-dir> <port>
  */
@@ -9,6 +10,7 @@
 const http = require('node:http')
 const fs = require('node:fs')
 const path = require('node:path')
+const zlib = require('node:zlib')
 
 const root = path.resolve(process.argv[2])
 const port = parseInt(process.argv[3], 10)
@@ -28,9 +30,28 @@ const MIME = {
   '.woff2': 'font/woff2',
 }
 
+const COMPRESSIBLE = new Set(['.html', '.js', '.mjs', '.css', '.json', '.svg'])
+
 if (!fs.existsSync(root)) {
   console.error(`Static root not found: ${root}`)
   process.exit(1)
+}
+
+function compress(data, acceptEncoding) {
+  if (!acceptEncoding) return { data, encoding: null }
+
+  // Prefer gzip (widely supported, decent ratio)
+  // Brotli would be better but requires native dependency
+  if (acceptEncoding.includes('gzip')) {
+    return {
+      data: zlib.gzipSync(data, { level: 9 }),
+      encoding: 'gzip',
+    }
+  }
+  if (acceptEncoding.includes('deflate')) {
+    return { data: zlib.deflateSync(data), encoding: 'deflate' }
+  }
+  return { data, encoding: null }
 }
 
 const server = http.createServer((req, res) => {
@@ -56,8 +77,14 @@ const server = http.createServer((req, res) => {
             res.end('Not found')
             return
           }
-          res.writeHead(200, { 'Content-Type': MIME['.html'] })
-          res.end(data)
+          const compressed = compress(data, req.headers['accept-encoding'])
+          res.writeHead(200, {
+            'Content-Type': MIME['.html'],
+            'Content-Encoding': compressed.encoding || 'identity',
+            'Cache-Control': 'no-cache',
+            Vary: 'Accept-Encoding',
+          })
+          res.end(compressed.data)
         })
         return
       }
@@ -73,15 +100,29 @@ const server = http.createServer((req, res) => {
         res.end('Server error')
         return
       }
-      res.writeHead(200, {
-        'Content-Type': MIME[ext] || 'application/octet-stream',
+
+      const mime = MIME[ext] || 'application/octet-stream'
+      const headers = {
+        'Content-Type': mime,
         'Cache-Control': 'no-cache',
-      })
-      res.end(data)
+        Vary: 'Accept-Encoding',
+      }
+
+      if (COMPRESSIBLE.has(ext)) {
+        const compressed = compress(data, req.headers['accept-encoding'])
+        if (compressed.encoding) {
+          headers['Content-Encoding'] = compressed.encoding
+        }
+        res.writeHead(200, headers)
+        res.end(compressed.data)
+      } else {
+        res.writeHead(200, headers)
+        res.end(data)
+      }
     })
   })
 })
 
 server.listen(port, () => {
-  console.log(`Static server serving ${root} on http://localhost:${port}`)
+  console.log(`Static server serving ${root} on http://localhost:${port} (gzip enabled)`)
 })
