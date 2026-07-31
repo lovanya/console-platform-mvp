@@ -3,10 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>common - remote</title>
+  <title>common - remote module</title>
 </head>
 <body>
-  <div id="root"></div>
-  <script type="module" src="./src/dev-entry.ts"></script>
+  <!--
+    Common is a Module Federation remote, not a standalone app.
+    It has no UI of its own — it's only loaded by Shell (or other hosts).
+    The dev server exists only to serve remoteEntry.js and exposed modules.
+    Open Shell at http://localhost:3000 to see the actual UI.
+  -->
+  <p>common is a Module Federation remote. Open <a href="http://localhost:3000">Shell</a>.</p>
 </body>
 </html>
