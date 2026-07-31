@@ -72,7 +72,8 @@ declare module 'common/AppRouter' {
     routes: RouteConfig[]
     fallback?: React.ReactNode
   }
-  export const AppRouter: React.FC<AppRouterProps>
+  const AppRouter: React.FC<AppRouterProps>
+  export default AppRouter
   export type { Loader, RouteConfig }
 }
 

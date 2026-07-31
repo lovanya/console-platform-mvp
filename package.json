@@ -2,7 +2,7 @@
   "name": "console-platform-mvp",
   "private": true,
   "scripts": {
-    "dev": "pnpm --parallel dev",
+    "dev": "node scripts/dev.js",
     "preview": "node scripts/preview.js",
     "dev:shell": "pnpm --filter shell dev",
     "dev:ecs": "pnpm --filter ecs dev",

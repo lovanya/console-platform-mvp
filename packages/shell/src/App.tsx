@@ -1,4 +1,4 @@
-import { AppRouter, type RouteConfig } from 'common/AppRouter'
+import AppRouter, { type RouteConfig } from 'common/AppRouter'
 import { lazy, Suspense } from 'react'
 import { BrowserRouter } from 'react-router-dom'
 import BillingSlot from './components/BillingSlot'

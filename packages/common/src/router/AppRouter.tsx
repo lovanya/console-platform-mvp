@@ -87,10 +87,12 @@ export interface AppRouterProps {
  * <AppRouter routes={routes} fallback={<Loading />} />
  * ```
  */
-export function AppRouter({ routes, fallback }: AppRouterProps) {
+function AppRouter({ routes, fallback }: AppRouterProps) {
   return (
     <Suspense fallback={fallback ?? <div style={{ padding: 24, color: '#999' }}>加载中...</div>}>
       <Routes>{routes.map((route, i) => renderRoute(route, `${i}`))}</Routes>
     </Suspense>
   )
 }
+
+export default AppRouter
