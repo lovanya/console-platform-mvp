@@ -72,9 +72,9 @@ function startProcess(name, cmd, args, cwd) {
 }
 
 function buildCommonSync() {
-  logHeader('Building common and billing (synchronous, populates dist/)')
+  logHeader('Building common (Rspack) and billing (Vite) — populates dist/')
 
-  const common = spawnSync('npx', ['vite', 'build'], {
+  const common = spawnSync('npx', ['rspack', 'build', '--mode', 'production'], {
     cwd: path.join(root, 'packages/common'),
     stdio: 'inherit',
     shell: true,
@@ -104,7 +104,7 @@ function main() {
     common: startProcess(
       'common',
       'npx',
-      ['vite', 'preview', '--port', '3002'],
+      ['rspack', 'serve', '--mode', 'development'],
       path.join(root, 'packages/common'),
     ),
     ecs: startProcess(

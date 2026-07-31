@@ -41,8 +41,8 @@ module.exports = (_env, argv) => {
           // ECS uses common/* components (Card, Table, LoadingFallback, AppRouter)
           // so it must declare common as a remote.
           common: isDev
-            ? 'common@http://localhost:3002/remoteEntry.var.js'
-            : 'common@https://cdn.console.aliyun.com/common/remoteEntry.var.js',
+            ? 'common@http://localhost:3002/remoteEntry.js'
+            : 'common@https://cdn.console.aliyun.com/common/remoteEntry.js',
         },
         exposes: {
           './routes': './src/router.tsx',

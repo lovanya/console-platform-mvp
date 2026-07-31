@@ -2,18 +2,13 @@ const path = require('node:path')
 const rspack = require('@rspack/core')
 const { ModuleFederationPlugin } = require('@module-federation/rspack')
 
-// NODE_ENV=production AND no PREVIEW_LOCAL flag → use CDN URLs (real production)
-// PREVIEW_LOCAL=1 OR NODE_ENV != 'production' → use localhost URLs (dev or local preview)
-const isDev = process.env.NODE_ENV !== 'production' || process.env.PREVIEW_LOCAL === '1'
+const isDev = process.env.NODE_ENV !== 'production'
 
 module.exports = {
   entry: path.resolve(__dirname, './src/index.tsx'),
   output: {
     path: path.resolve(__dirname, './dist'),
-    // Use '/' instead of 'auto' so script src is absolute.
-    // 'auto' doesn't work reliably when serving from a deep path
-    // (e.g., /products/slb) with a static file server.
-    publicPath: '/',
+    publicPath: 'auto',
     clean: true,
   },
   resolve: {
@@ -27,16 +22,11 @@ module.exports = {
         loader: 'builtin:swc-loader',
         options: {
           jsc: {
-            parser: {
-              syntax: 'typescript',
-              tsx: true,
-            },
+            parser: { syntax: 'typescript', tsx: true },
             transform: {
               react: {
                 runtime: 'automatic',
-                // Use production JSX runtime even in dev mode to avoid
-                // react-jsx-dev-runtime module-init edge cases with MF shared singleton
-                development: false,
+                development: isDev,
                 refresh: false,
               },
             },
@@ -48,35 +38,34 @@ module.exports = {
   },
   plugins: [
     new ModuleFederationPlugin({
-      name: 'shell',
-      remotes: {
-        ecs: isDev
-          ? 'ecs@http://localhost:3001/remoteEntry.js'
-          : 'ecs@https://cdn.console.aliyun.com/ecs/remoteEntry.js',
-        common: isDev
-          ? 'common@http://localhost:3002/remoteEntry.js'
-          : 'common@https://cdn.console.aliyun.com/common/remoteEntry.js',
-        billing: isDev
-          ? 'billing@http://localhost:3003/remoteEntry.var.js'
-          : 'billing@https://cdn.console.aliyun.com/billing/remoteEntry.var.js',
+      name: 'common',
+      filename: 'remoteEntry.js',
+      exposes: {
+        './RegionSelect': './src/RegionSelect.tsx',
+        './PriceBadge': './src/PriceBadge.tsx',
+        './LoadingFallback': './src/components/LoadingFallback.tsx',
+        './Card': './src/components/Card.tsx',
+        './Table': './src/components/Table.tsx',
+        './AppRouter': './src/router/AppRouter.tsx',
       },
       shared: {
         react: {
           singleton: true,
           requiredVersion: '^18.2.0',
-          eager: true,
+          // eager: false — Shell is the only eager provider.
+          // If both are eager, the first one to load wins, which may
+          // not be Shell. Common's React stays as fallback that gets
+          // overridden by Shell's React via shared scope.
           packageName: 'react',
         },
         'react-dom': {
           singleton: true,
           requiredVersion: '^18.2.0',
-          eager: true,
           packageName: 'react-dom',
         },
         'react-router-dom': {
           singleton: true,
           requiredVersion: '^6.20.0',
-          eager: true,
           packageName: 'react-router-dom',
         },
       },
@@ -86,7 +75,7 @@ module.exports = {
     }),
   ],
   devServer: {
-    port: 3000,
+    port: 3002,
     historyApiFallback: true,
     hot: true,
   },

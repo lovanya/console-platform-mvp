@@ -91,11 +91,11 @@ function runSync(name, cmd, args, cwd) {
 function main() {
   logHeader('Building all packages (production mode)')
 
-  // Build common — populates dist/ for vite preview
+  // Build common — uses Rspack now
   runSync(
     'common',
     'npx',
-    ['vite', 'build', '--mode', 'production'],
+    ['rspack', 'build', '--mode', 'production'],
     path.join(root, 'packages/common'),
   )
 
@@ -120,12 +120,12 @@ function main() {
 
   logHeader('Starting preview servers')
 
-  // Common: use vite preview (built-in static server, handles dist/ correctly)
+  // Common: use Node static server
   const _commonServer = run(
     'common',
-    'npx',
-    ['vite', 'preview', '--port', '3002'],
-    path.join(root, 'packages/common'),
+    'node',
+    [path.join(root, 'scripts/static-server.js'), path.join(root, 'packages/common/dist'), '3002'],
+    root,
   )
 
   // Billing: use vite preview
