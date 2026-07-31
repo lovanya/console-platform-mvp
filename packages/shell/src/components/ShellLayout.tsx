@@ -13,7 +13,9 @@ const CROSS_PRODUCTS = [
   { id: 'workorder', name: '工单系统', icon: '🎫', path: '/workorder' },
 ]
 
-const RegionSelect = lazy(() => import('common/RegionSelect'))
+const RegionSelect = lazy(() =>
+  import('common/components').then((m) => ({ default: m.RegionSelect })),
+)
 
 export default function ShellLayout() {
   const { productId } = useParams()

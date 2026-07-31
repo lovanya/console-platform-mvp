@@ -5,7 +5,10 @@ const { ModuleFederationPlugin } = require('@module-federation/rspack')
 const isDev = process.env.NODE_ENV !== 'production'
 
 module.exports = {
-  entry: path.resolve(__dirname, './src/index.tsx'),
+  // Common is a Module Federation remote, not a standalone app.
+  // The entry exists only to satisfy Rspack's bundling requirement.
+  // The actual exports are declared in `exposes` below.
+  entry: path.resolve(__dirname, './src/entry.tsx'),
   output: {
     path: path.resolve(__dirname, './dist'),
     publicPath: 'auto',
@@ -41,12 +44,8 @@ module.exports = {
       name: 'common',
       filename: 'remoteEntry.js',
       exposes: {
-        './RegionSelect': './src/RegionSelect.tsx',
-        './PriceBadge': './src/PriceBadge.tsx',
-        './LoadingFallback': './src/components/LoadingFallback.tsx',
-        './Card': './src/components/Card.tsx',
-        './Table': './src/components/Table.tsx',
-        './AppRouter': './src/router/AppRouter.tsx',
+        './components': './src/components/index.ts',
+        './tools': './src/tools/index.ts',
       },
       shared: {
         react: {

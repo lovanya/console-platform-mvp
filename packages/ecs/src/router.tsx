@@ -1,4 +1,4 @@
-import AppRouter, { type RouteConfig } from 'common/AppRouter'
+import { AppRouter, type RouteConfig } from 'common/components'
 import { Navigate } from 'react-router-dom'
 import InstanceDetail from './pages/InstanceDetail'
 import InstanceList from './pages/InstanceList'

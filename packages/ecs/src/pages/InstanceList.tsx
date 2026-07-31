@@ -1,6 +1,4 @@
-import Card from 'common/Card'
-import LoadingFallback from 'common/LoadingFallback'
-import Table from 'common/Table'
+import { Card, LoadingFallback, Table } from 'common/components'
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 
@@ -162,7 +160,7 @@ export default function InstanceList() {
     >
       <Table
         columns={columns}
-        data={instances as unknown as Record<string, unknown>[]}
+        data={instances as unknown as Record<string, React.ReactNode>[]}
         rowKey="id"
       />
     </Card>

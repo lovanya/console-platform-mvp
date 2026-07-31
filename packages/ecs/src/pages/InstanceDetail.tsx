@@ -1,4 +1,4 @@
-import Card from 'common/Card'
+import { Card } from 'common/components'
 import { Link, useParams } from 'react-router-dom'
 
 const DETAILS: { label: string; value: string }[] = [
