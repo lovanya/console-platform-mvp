@@ -4,38 +4,58 @@ import { useLocation } from 'react-router-dom'
 /**
  * Slot for embedding a Vue 3 sub-application (Type C) inside the React Shell.
  *
- * The Vue app's bootstrap is loaded from MF, then mounted into a DOM
- * container. When the route leaves the Vue subtree, the app is unmounted.
+ * Mounting strategy:
+ * - Mount the Vue app ONCE when first entering /billing subtree
+ * - Keep it mounted across internal navigation (e.g., /billing/overview
+ *   -> /billing/orders) so that Vue's <KeepAlive> cache survives
+ * - Unmount only when leaving /billing subtree entirely
+ *
+ * This is critical for Vue's keep-alive to work: if we re-mounted the
+ * app on every route change, the keep-alive cache would be destroyed.
  */
 export default function BillingSlot() {
   const containerRef = useRef<HTMLDivElement>(null)
+  const appRef = useRef<unknown>(null)
   const location = useLocation()
+  const isInBilling = location.pathname.startsWith('/billing')
 
   useEffect(() => {
+    // Leaving the /billing subtree: unmount the Vue app
+    if (!isInBilling) {
+      if (appRef.current) {
+        import('billing/bootstrap').then(({ unmount }) => {
+          unmount()
+        })
+        appRef.current = null
+      }
+      return
+    }
+
+    // Already mounted: do nothing. Vue Router inside handles navigation.
+    if (appRef.current) return
+
+    // First mount
     if (!containerRef.current) return
-
-    let mounted = true
-    let unmountFn: (() => Promise<void>) | null = null
-
-    const loadAndMount = async () => {
-      const { mount, unmount } = await import('billing/bootstrap')
+    const mounted = true
+    ;(async () => {
+      const { mount } = await import('billing/bootstrap')
       if (!mounted) return
-      await unmount()
       await mount({
         container: containerRef.current!,
         basename: '/billing',
       })
-      unmountFn = unmount
-    }
+      appRef.current = true // sentinel — real app ref is in mount's return
+    })()
+  }, [isInBilling])
 
-    loadAndMount()
-
+  // Cleanup on unmount
+  useEffect(() => {
     return () => {
-      mounted = false
-      if (!location.pathname.startsWith('/billing')) return
-      unmountFn?.()
+      import('billing/bootstrap').then(({ unmount }) => {
+        unmount()
+      })
     }
-  }, [location.pathname])
+  }, [])
 
   return <div ref={containerRef} style={{ padding: 24 }} />
 }
