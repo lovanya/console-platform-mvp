@@ -4,7 +4,12 @@ import { RouterView } from 'vue-router'
 
 <template>
   <div class="billing-app">
-    <RouterView />
+    <!-- keep-alive: preserve component state across /overview <-> /orders navigation -->
+    <RouterView v-slot="{ Component }">
+      <KeepAlive :include="['Overview', 'Orders']">
+        <component :is="Component" />
+      </KeepAlive>
+    </RouterView>
   </div>
 </template>
 
