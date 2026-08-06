@@ -1,5 +1,7 @@
 export { default as AppRouter } from './AppRouter'
 export { default as Card } from './Card'
+export type { KeepAliveProps } from './KeepAlive'
+export { KeepAlive } from './KeepAlive'
 export { default as LoadingFallback } from './LoadingFallback'
 export { default as PriceBadge } from './PriceBadge'
 export { default as RegionSelect } from './RegionSelect'

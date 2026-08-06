@@ -1,17 +1,13 @@
-import { AppRouter, type RouteConfig } from 'common/components'
+import { AppRouter, KeepAlive, type RouteConfig } from 'common/components'
 import { Navigate, useLocation } from 'react-router-dom'
 import InstanceDetail from './pages/InstanceDetail'
 import InstanceList from './pages/InstanceList'
 
 /**
- * Single route element that owns both list and detail.
- * Both components stay mounted across navigation, so their
- * internal state (pagination, scroll, filters) is preserved
- * without needing any external keep-alive library.
- *
- * Approach: show/hide via CSS instead of mount/unmount.
- * Trade-off: both components' useEffects run, but our mock data
- * is cheap. For real APIs, add lazy loading to detail.
+ * Internal switcher between list and detail. Both components stay
+ * mounted in <KeepAlive>; one is hidden via display:none when
+ * inactive. State (pagination, scroll, filters) is preserved
+ * because the component instances never unmount.
  */
 function InstancesRoot() {
   const location = useLocation()
@@ -19,16 +15,9 @@ function InstancesRoot() {
   const showDetail = !!id
 
   return (
-    <div>
-      <div style={{ display: showDetail ? 'none' : 'block' }}>
-        <InstanceList />
-      </div>
-      {id && (
-        <div style={{ display: showDetail ? 'block' : 'none' }}>
-          <InstanceDetail />
-        </div>
-      )}
-    </div>
+    <KeepAlive include={['InstanceList', 'InstanceDetail']} max={5}>
+      {showDetail && id ? <InstanceDetail key={id} /> : <InstanceList />}
+    </KeepAlive>
   )
 }
 
